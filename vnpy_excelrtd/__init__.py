@@ -33,4 +33,4 @@ class ExcelRtdApp(BaseApp):
     display_name = "Excel RTD"
     engine_class = RtdEngine
     widget_name = "RtdManager"
-    icon_name = "rtd.ico"
+    icon_name = str(app_path.joinpath("ui", "rtd.ico"))
