@@ -1,5 +1,3 @@
-""""""
-
 from typing import Dict, Set, Any
 from collections import defaultdict
 
@@ -9,8 +7,8 @@ from vnpy.rpc import RpcClient
 from vnpy.trader.object import TickData
 
 
-REQ_ADDRESS: str = "tcp://localhost:9001"
-SUB_ADDRESS: str = "tcp://localhost:9002"
+REQ_ADDRESS = "tcp://localhost:9001"
+SUB_ADDRESS = "tcp://localhost:9002"
 
 
 rtd_client: "RtdClient" = None
@@ -68,7 +66,7 @@ class RtdClient(RpcClient):
     def callback(self, topic: str, data: Any) -> None:
         """"""
         tick: TickData = data
-        buf: dict = self.rtds[tick.vt_symbol]
+        buf: Set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
         for rtd in buf:
             rtd.update(tick)
@@ -77,7 +75,7 @@ class RtdClient(RpcClient):
         """
         Add a new RTD into the engine..
         """
-        buf: dict = self.rtds[rtd.name]
+        buf: Set[ObjectRtd] = self.rtds[rtd.name]
         buf.add(rtd)
         self.write_log(f"新增RTD连接：{rtd.name} {rtd.field}")
 
@@ -88,7 +86,7 @@ class RtdClient(RpcClient):
         """
         Remove an existing RTD from the engine.
         """
-        buf: dict = self.rtds[self.name]
+        buf: Set[ObjectRtd] = self.rtds[self.name]
         if self in buf:
             buf.remove(rtd)
             self.write_log(f"移除RTD连接：{rtd.name} {rtd.field}")

@@ -1,6 +1,4 @@
-""""""
-
-from typing import Set
+from typing import Set, Optional
 
 from vnpy.event import Event, EventEngine
 from vnpy.rpc import RpcServer
@@ -9,12 +7,12 @@ from vnpy.trader.object import TickData, ContractData, LogData, SubscribeRequest
 from vnpy.trader.event import EVENT_TICK
 
 
-APP_NAME: str = "ExcelRtd"
+APP_NAME = "ExcelRtd"
 
-EVENT_RTD_LOG: str = "eRtdLog"
+EVENT_RTD_LOG = "eRtdLog"
 
-REP_ADDRESS: str = "tcp://*:9001"
-PUB_ADDRESS: str = "tcp://*:9002"
+REP_ADDRESS = "tcp://*:9001"
+PUB_ADDRESS = "tcp://*:9002"
 
 
 class RtdEngine(BaseEngine):
@@ -60,7 +58,7 @@ class RtdEngine(BaseEngine):
         """
         Subscribe tick data update.
         """
-        contract: ContractData = self.main_engine.get_contract(vt_symbol)
+        contract: Optional[ContractData] = self.main_engine.get_contract(vt_symbol)
         if not contract:
             return
 
