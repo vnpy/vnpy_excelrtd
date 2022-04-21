@@ -1,5 +1,3 @@
-""""""
-
 from typing import Dict, Set, Any
 from collections import defaultdict
 
@@ -21,13 +19,13 @@ class ObjectRtd(RTD):
     RTD proxy for object in Python.
     """
 
-    def __init__(self, engine: "RtdClient", name: str, field: str):
+    def __init__(self, engine: "RtdClient", name: str, field: str) -> None:
         """Constructor"""
         super().__init__(value=0)
 
-        self.engine = engine
-        self.name = name
-        self.field = field
+        self.engine: RtdClient = engine
+        self.name: str = name
+        self.field: str = field
 
     def connect(self) -> None:
         """
@@ -56,19 +54,19 @@ class RtdClient(RpcClient):
     The engine for managing RTD objects and data update.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """"""
         super().__init__()
 
         self.rtds: Dict[str, Set[ObjectRtd]] = defaultdict(set)
 
         global rtd_client
-        rtd_client = self
+        rtd_client: RtdClient = self
 
     def callback(self, topic: str, data: Any) -> None:
         """"""
         tick: TickData = data
-        buf = self.rtds[tick.vt_symbol]
+        buf: Set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
         for rtd in buf:
             rtd.update(tick)
@@ -77,7 +75,7 @@ class RtdClient(RpcClient):
         """
         Add a new RTD into the engine..
         """
-        buf = self.rtds[rtd.name]
+        buf: Set[ObjectRtd] = self.rtds[rtd.name]
         buf.add(rtd)
         self.write_log(f"新增RTD连接：{rtd.name} {rtd.field}")
 
@@ -88,7 +86,7 @@ class RtdClient(RpcClient):
         """
         Remove an existing RTD from the engine.
         """
-        buf = self.rtds[self.name]
+        buf: Set[ObjectRtd] = self.rtds[self.name]
         if self in buf:
             buf.remove(rtd)
             self.write_log(f"移除RTD连接：{rtd.name} {rtd.field}")
@@ -97,7 +95,7 @@ class RtdClient(RpcClient):
 def init_client() -> None:
     """Initialize vnpy rtd client"""
     global rtd_client
-    rtd_client = RtdClient()
+    rtd_client: RtdClient = RtdClient()
     rtd_client.subscribe_topic("")
     rtd_client.start(REQ_ADDRESS, SUB_ADDRESS)
 
@@ -110,5 +108,5 @@ def rtd_tick_data(vt_symbol: str, field: str) -> ObjectRtd:
     if not rtd_client:
         init_client()
 
-    rtd = ObjectRtd(rtd_client, vt_symbol, field)
+    rtd: ObjectRtd = ObjectRtd(rtd_client, vt_symbol, field)
     return rtd

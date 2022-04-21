@@ -1,11 +1,9 @@
-""""""
-
-from typing import Set
+from typing import Set, Optional
 
 from vnpy.event import Event, EventEngine
 from vnpy.rpc import RpcServer
 from vnpy.trader.engine import BaseEngine, MainEngine
-from vnpy.trader.object import TickData, LogData, SubscribeRequest
+from vnpy.trader.object import TickData, ContractData, LogData, SubscribeRequest
 from vnpy.trader.event import EVENT_TICK
 
 
@@ -22,7 +20,7 @@ class RtdEngine(BaseEngine):
     The engine for managing RTD objects and data update.
     """
 
-    def __init__(self, main_engine: MainEngine, event_engine: EventEngine):
+    def __init__(self, main_engine: MainEngine, event_engine: EventEngine) -> None:
         """"""
         super().__init__(main_engine, event_engine, APP_NAME)
 
@@ -52,15 +50,15 @@ class RtdEngine(BaseEngine):
         """
         Output RTD related log message.
         """
-        log = LogData(msg=msg, gateway_name=APP_NAME)
-        event = Event(EVENT_RTD_LOG, log)
+        log: LogData = LogData(msg=msg, gateway_name=APP_NAME)
+        event: Event = Event(EVENT_RTD_LOG, log)
         self.event_engine.put(event)
 
     def subscribe(self, vt_symbol: str) -> None:
         """
         Subscribe tick data update.
         """
-        contract = self.main_engine.get_contract(vt_symbol)
+        contract: Optional[ContractData] = self.main_engine.get_contract(vt_symbol)
         if not contract:
             return
 
@@ -68,13 +66,13 @@ class RtdEngine(BaseEngine):
             return
         self.subscribed.add(vt_symbol)
 
-        req = SubscribeRequest(
+        req: SubscribeRequest = SubscribeRequest(
             contract.symbol,
             contract.exchange
         )
         self.main_engine.subscribe(req, contract.gateway_name)
 
-    def close(self):
+    def close(self) -> None:
         """"""
         self.server.stop()
         self.server.join()
