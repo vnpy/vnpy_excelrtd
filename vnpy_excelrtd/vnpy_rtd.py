@@ -61,7 +61,7 @@ class RtdClient(RpcClient):
         self.rtds: Dict[str, Set[ObjectRtd]] = defaultdict(set)
 
         global rtd_client
-        rtd_client: RtdClient = self
+        rtd_client = self
 
     def callback(self, topic: str, data: Any) -> None:
         """"""
@@ -95,7 +95,7 @@ class RtdClient(RpcClient):
 def init_client() -> None:
     """Initialize vnpy rtd client"""
     global rtd_client
-    rtd_client: RtdClient = RtdClient()
+    rtd_client = RtdClient()
     rtd_client.subscribe_topic("")
     rtd_client.start(REQ_ADDRESS, SUB_ADDRESS)
 
