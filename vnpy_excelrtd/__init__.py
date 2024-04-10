@@ -36,3 +36,10 @@ class ExcelRtdApp(BaseApp):
     engine_class: RtdEngine = RtdEngine
     widget_name: str = "RtdManager"
     icon_name: str = str(app_path.joinpath("ui", "rtd.ico"))
+
+
+def pyxll_modules():
+    """Return a list of modules for PyXLL to import on startup."""
+    return [
+        "vnpy_excelrtd.vnpy_rtd"
+    ]
