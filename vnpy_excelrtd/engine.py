@@ -1,4 +1,4 @@
-from typing import Set, Optional
+from typing import Optional
 
 from vnpy.event import Event, EventEngine
 from vnpy.rpc import RpcServer
@@ -29,7 +29,7 @@ class RtdEngine(BaseEngine):
         self.server.register(self.write_log)
         self.server.start(REP_ADDRESS, PUB_ADDRESS)
 
-        self.subscribed: Set[str] = set()
+        self.subscribed: set[str] = set()
 
         self.register_event()
 

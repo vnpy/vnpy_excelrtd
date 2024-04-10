@@ -1,4 +1,3 @@
-from typing import Dict, Set, Any
 from collections import defaultdict
 
 from pyxll import RTD, xl_func
@@ -58,15 +57,15 @@ class RtdClient(RpcClient):
         """"""
         super().__init__()
 
-        self.rtds: Dict[str, Set[ObjectRtd]] = defaultdict(set)
+        self.rtds: dict[str, set[ObjectRtd]] = defaultdict(set)
 
         global rtd_client
         rtd_client = self
 
-    def callback(self, topic: str, data: Any) -> None:
+    def callback(self, topic: str, data: object) -> None:
         """"""
         tick: TickData = data
-        buf: Set[ObjectRtd] = self.rtds[tick.vt_symbol]
+        buf: set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
         for rtd in buf:
             rtd.update(tick)
@@ -75,7 +74,7 @@ class RtdClient(RpcClient):
         """
         Add a new RTD into the engine..
         """
-        buf: Set[ObjectRtd] = self.rtds[rtd.name]
+        buf: set[ObjectRtd] = self.rtds[rtd.name]
         buf.add(rtd)
         self.write_log(f"新增RTD连接：{rtd.name} {rtd.field}")
 
@@ -86,7 +85,7 @@ class RtdClient(RpcClient):
         """
         Remove an existing RTD from the engine.
         """
-        buf: Set[ObjectRtd] = self.rtds[self.name]
+        buf: set[ObjectRtd] = self.rtds[self.name]
         if self in buf:
             buf.remove(rtd)
             self.write_log(f"移除RTD连接：{rtd.name} {rtd.field}")
