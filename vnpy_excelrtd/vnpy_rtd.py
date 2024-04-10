@@ -38,7 +38,7 @@ class ObjectRtd(RTD):
         """
         self.engine.remove_rtd(self)
 
-    def update(self, data: Any) -> None:
+    def update(self, data: object) -> None:
         """
         Update value in excel cell.
         """
