@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Any
 
 from pyxll import RTD, xl_func
 
@@ -25,6 +26,7 @@ class ObjectRtd(RTD):
         self.engine: RtdClient = engine
         self.name: str = name
         self.field: str = field
+        self.value: Any = 0
 
     def connect(self) -> None:
         """
