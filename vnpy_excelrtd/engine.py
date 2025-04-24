@@ -1,4 +1,3 @@
-from typing import Optional
 
 from vnpy.event import Event, EventEngine
 from vnpy.rpc import RpcServer
@@ -58,7 +57,7 @@ class RtdEngine(BaseEngine):
         """
         Subscribe tick data update.
         """
-        contract: Optional[ContractData] = self.main_engine.get_contract(vt_symbol)
+        contract: ContractData | None = self.main_engine.get_contract(vt_symbol)
         if not contract:
             return
 
