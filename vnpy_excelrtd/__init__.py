@@ -27,18 +27,28 @@ from vnpy.trader.app import BaseApp
 from .engine import RtdEngine, APP_NAME
 
 
+__all__ = [
+    "RtdEngine",
+    "APP_NAME",
+    "ExcelRtdApp",
+]
+
+
+__version__ = "1.1.0"
+
+
 class ExcelRtdApp(BaseApp):
     """"""
     app_name: str = APP_NAME
     app_module: str = __module__
     app_path: Path = Path(__file__).parent
     display_name: str = "Excel RTD"
-    engine_class: RtdEngine = RtdEngine
+    engine_class: type[RtdEngine] = RtdEngine
     widget_name: str = "RtdManager"
     icon_name: str = str(app_path.joinpath("ui", "rtd.ico"))
 
 
-def pyxll_modules():
+def pyxll_modules() -> list[str]:
     """Return a list of modules for PyXLL to import on startup."""
     return [
         "vnpy_excelrtd.vnpy_rtd"

@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import Any
 
 from pyxll import RTD, xl_func
 
@@ -10,7 +11,7 @@ REQ_ADDRESS = "tcp://localhost:9001"
 SUB_ADDRESS = "tcp://localhost:9002"
 
 
-rtd_client: "RtdClient" = None
+rtd_client: "RtdClient" | None = None
 
 
 class ObjectRtd(RTD):
@@ -25,6 +26,7 @@ class ObjectRtd(RTD):
         self.engine: RtdClient = engine
         self.name: str = name
         self.field: str = field
+        self.value: Any = 0
 
     def connect(self) -> None:
         """
@@ -99,7 +101,7 @@ def init_client() -> None:
     rtd_client.start(REQ_ADDRESS, SUB_ADDRESS)
 
 
-@xl_func("string vt_symbol, string field: rtd")
+@xl_func("string vt_symbol, string field: rtd")    # type: ignore
 def rtd_tick_data(vt_symbol: str, field: str) -> ObjectRtd:
     """
     Return the streaming value of the tick data field.
@@ -107,5 +109,5 @@ def rtd_tick_data(vt_symbol: str, field: str) -> ObjectRtd:
     if not rtd_client:
         init_client()
 
-    rtd: ObjectRtd = ObjectRtd(rtd_client, vt_symbol, field)
+    rtd = ObjectRtd(rtd_client, vt_symbol, field)  # type: ignore
     return rtd
