@@ -1,3 +1,4 @@
+"""供 Excel RTD 调用的行情客户端。"""
 from collections import defaultdict
 from typing import Any
 
@@ -16,11 +17,11 @@ rtd_client: "RtdClient" | None = None
 
 class ObjectRtd(RTD):
     """
-    RTD proxy for object in Python.
+    Python 对象的 RTD 代理。
     """
 
     def __init__(self, engine: "RtdClient", name: str, field: str) -> None:
-        """Constructor"""
+        """构造函数。"""
         super().__init__(value=0)
 
         self.engine: RtdClient = engine
@@ -30,19 +31,19 @@ class ObjectRtd(RTD):
 
     def connect(self) -> None:
         """
-        Callback when excel cell rtd is connected.
+        Excel 单元格 RTD 连接时的回调。
         """
         self.engine.add_rtd(self)
 
     def disconnect(self) -> None:
         """
-        Callback when excel cell rtd is disconncted.
+        Excel 单元格 RTD 断开时的回调。
         """
         self.engine.remove_rtd(self)
 
     def update(self, data: object) -> None:
         """
-        Update value in excel cell.
+        更新 Excel 单元格中的值。
         """
         new_value = getattr(data, self.field, "N/A")
 
@@ -52,11 +53,11 @@ class ObjectRtd(RTD):
 
 class RtdClient(RpcClient):
     """
-    The engine for managing RTD objects and data update.
+    管理 RTD 对象和数据更新的引擎。
     """
 
     def __init__(self) -> None:
-        """"""
+        """初始化 RTD 集合并把自身登记为全局客户端。"""
         super().__init__()
 
         self.rtds: dict[str, set[ObjectRtd]] = defaultdict(set)
@@ -65,7 +66,7 @@ class RtdClient(RpcClient):
         rtd_client = self
 
     def callback(self, topic: str, data: object) -> None:
-        """"""
+        """按 Tick 的本地代码更新已登记的 RTD。"""
         tick: TickData = data
         buf: set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
@@ -74,7 +75,7 @@ class RtdClient(RpcClient):
 
     def add_rtd(self, rtd: ObjectRtd) -> None:
         """
-        Add a new RTD into the engine..
+        把新的 RTD 加入引擎。
         """
         buf: set[ObjectRtd] = self.rtds[rtd.name]
         buf.add(rtd)
@@ -85,7 +86,7 @@ class RtdClient(RpcClient):
 
     def remove_rtd(self, rtd: ObjectRtd) -> None:
         """
-        Remove an existing RTD from the engine.
+        从引擎移除已有 RTD。
         """
         buf: set[ObjectRtd] = self.rtds[self.name]
         if self in buf:
@@ -94,7 +95,7 @@ class RtdClient(RpcClient):
 
 
 def init_client() -> None:
-    """Initialize vnpy rtd client"""
+    """初始化 VeighNa RTD 客户端。"""
     global rtd_client
     rtd_client = RtdClient()
     rtd_client.subscribe_topic("")
@@ -104,7 +105,7 @@ def init_client() -> None:
 @xl_func("string vt_symbol, string field: rtd")    # type: ignore
 def rtd_tick_data(vt_symbol: str, field: str) -> ObjectRtd:
     """
-    Return the streaming value of the tick data field.
+    返回 Tick 字段的实时值。
     """
     if not rtd_client:
         init_client()

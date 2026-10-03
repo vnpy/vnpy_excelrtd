@@ -19,6 +19,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+"""Excel RTD 应用包。"""
 
 from pathlib import Path
 
@@ -38,7 +39,7 @@ __version__ = "1.1.0"
 
 
 class ExcelRtdApp(BaseApp):
-    """"""
+    """Excel RTD 应用。"""
     app_name: str = APP_NAME
     app_module: str = __module__
     app_path: Path = Path(__file__).parent
@@ -49,7 +50,7 @@ class ExcelRtdApp(BaseApp):
 
 
 def pyxll_modules() -> list[str]:
-    """Return a list of modules for PyXLL to import on startup."""
+    """返回 PyXLL 启动时要导入的模块列表。"""
     return [
         "vnpy_excelrtd.vnpy_rtd"
     ]

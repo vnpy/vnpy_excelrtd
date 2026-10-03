@@ -1,3 +1,4 @@
+"""通过 RPC 发布行情和日志的 Excel RTD 引擎。"""
 
 from vnpy.event import Event, EventEngine
 from vnpy.rpc import RpcServer
@@ -16,11 +17,11 @@ PUB_ADDRESS = "tcp://*:9002"
 
 class RtdEngine(BaseEngine):
     """
-    The engine for managing RTD objects and data update.
+    管理 RTD 对象和数据更新的引擎。
     """
 
     def __init__(self, main_engine: MainEngine, event_engine: EventEngine) -> None:
-        """"""
+        """启动 RPC 服务并注册行情订阅、日志和 Tick 事件。"""
         super().__init__(main_engine, event_engine, APP_NAME)
 
         self.server: RpcServer = RpcServer()
@@ -34,20 +35,20 @@ class RtdEngine(BaseEngine):
 
     def register_event(self) -> None:
         """
-        Register event handler.
+        注册事件处理函数。
         """
         self.event_engine.register(EVENT_TICK, self.process_tick_event)
 
     def process_tick_event(self, event: Event) -> None:
         """
-        Process tick event and update related RTD value.
+        处理 Tick 事件并更新相关 RTD 值。
         """
         tick: TickData = event.data
         self.server.publish("tick", tick)
 
     def write_log(self, msg: str) -> None:
         """
-        Output RTD related log message.
+        输出 RTD 相关日志。
         """
         log: LogData = LogData(msg=msg, gateway_name=APP_NAME)
         event: Event = Event(EVENT_RTD_LOG, log)
@@ -55,7 +56,7 @@ class RtdEngine(BaseEngine):
 
     def subscribe(self, vt_symbol: str) -> None:
         """
-        Subscribe tick data update.
+        订阅 Tick 数据更新。
         """
         contract: ContractData | None = self.main_engine.get_contract(vt_symbol)
         if not contract:
@@ -72,6 +73,6 @@ class RtdEngine(BaseEngine):
         self.main_engine.subscribe(req, contract.gateway_name)
 
     def close(self) -> None:
-        """"""
+        """停止 RPC 服务并等待其结束。"""
         self.server.stop()
         self.server.join()

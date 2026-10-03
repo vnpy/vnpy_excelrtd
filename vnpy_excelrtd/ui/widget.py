@@ -1,3 +1,4 @@
+"""Excel RTD 管理界面。"""
 from pathlib import Path
 
 from vnpy.event import EventEngine, Event
@@ -8,11 +9,11 @@ from ..engine import APP_NAME, EVENT_RTD_LOG, BaseEngine
 
 
 class RtdManager(QtWidgets.QWidget):
-    """"""
+    """Excel RTD 管理界面。"""
     signal_log: QtCore.Signal = QtCore.Signal(Event)
 
     def __init__(self, main_engine: MainEngine, event_engine: EventEngine) -> None:
-        """"""
+        """取得 RTD 引擎并初始化界面。"""
         super().__init__()
 
         self.main_engine: MainEngine = main_engine

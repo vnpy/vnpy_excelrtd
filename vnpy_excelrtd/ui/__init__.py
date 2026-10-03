@@ -1,3 +1,4 @@
+"""Excel RTD 界面。"""
 from .widget import RtdManager
 
 
