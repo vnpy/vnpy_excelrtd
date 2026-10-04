@@ -7,12 +7,12 @@ from vnpy.trader.object import TickData, ContractData, LogData, SubscribeRequest
 from vnpy.trader.event import EVENT_TICK
 
 
-APP_NAME = "ExcelRtd"
+APP_NAME: str = "ExcelRtd"
 
-EVENT_RTD_LOG = "eRtdLog"
+EVENT_RTD_LOG: str = "eRtdLog"
 
-REP_ADDRESS = "tcp://*:9001"
-PUB_ADDRESS = "tcp://*:9002"
+REP_ADDRESS: str = "tcp://*:9001"
+PUB_ADDRESS: str = "tcp://*:9002"
 
 
 class RtdEngine(BaseEngine):

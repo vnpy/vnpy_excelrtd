@@ -8,8 +8,8 @@ from vnpy.rpc import RpcClient
 from vnpy.trader.object import TickData
 
 
-REQ_ADDRESS = "tcp://localhost:9001"
-SUB_ADDRESS = "tcp://localhost:9002"
+REQ_ADDRESS: str = "tcp://localhost:9001"
+SUB_ADDRESS: str = "tcp://localhost:9002"
 
 
 rtd_client: "RtdClient" | None = None
@@ -45,7 +45,7 @@ class ObjectRtd(RTD):
         """
         更新 Excel 单元格中的值。
         """
-        new_value = getattr(data, self.field, "N/A")
+        new_value: object = getattr(data, self.field, "N/A")
 
         if new_value != self.value:
             self.value = new_value
@@ -70,6 +70,7 @@ class RtdClient(RpcClient):
         tick: TickData = cast(TickData, data)
         buf: set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
+        rtd: ObjectRtd
         for rtd in buf:
             rtd.update(tick)
 
@@ -111,5 +112,5 @@ def rtd_tick_data(vt_symbol: str, field: str) -> ObjectRtd:
     if not rtd_client:
         init_client()
 
-    rtd = ObjectRtd(rtd_client, vt_symbol, field)  # type: ignore
+    rtd: ObjectRtd = ObjectRtd(rtd_client, vt_symbol, field)  # type: ignore
     return rtd
