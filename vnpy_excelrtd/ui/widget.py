@@ -1,5 +1,6 @@
 """Excel RTD 管理界面。"""
 from pathlib import Path
+from typing import cast
 
 from vnpy.event import EventEngine, Event
 from vnpy.trader.engine import MainEngine
@@ -18,7 +19,7 @@ class RtdManager(QtWidgets.QWidget):
 
         self.main_engine: MainEngine = main_engine
         self.event_engine: EventEngine = event_engine
-        self.rm_engine: BaseEngine = main_engine.get_engine(APP_NAME)
+        self.rm_engine: BaseEngine = cast(BaseEngine, main_engine.get_engine(APP_NAME))
 
         self.init_ui()
         self.register_event()

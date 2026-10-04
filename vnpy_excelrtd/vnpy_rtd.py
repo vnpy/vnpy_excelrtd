@@ -1,6 +1,6 @@
 """供 Excel RTD 调用的行情客户端。"""
 from collections import defaultdict
-from typing import Any
+from typing import Any, cast
 
 from pyxll import RTD, xl_func
 
@@ -67,7 +67,7 @@ class RtdClient(RpcClient):
 
     def callback(self, topic: str, data: object) -> None:
         """按 Tick 的本地代码更新已登记的 RTD。"""
-        tick: TickData = data
+        tick: TickData = cast(TickData, data)
         buf: set[ObjectRtd] = self.rtds[tick.vt_symbol]
 
         for rtd in buf:
@@ -88,7 +88,8 @@ class RtdClient(RpcClient):
         """
         从引擎移除已有 RTD。
         """
-        buf: set[ObjectRtd] = self.rtds[self.name]
+        # self.name 经 RpcClient.__getattr__ 得到 lru_cache 包装；运行时键就是该对象，不能改成 rtd.name。
+        buf: set[ObjectRtd] = self.rtds[cast(str, self.name)]
         if self in buf:
             buf.remove(rtd)
             self.write_log(f"移除RTD连接：{rtd.name} {rtd.field}")
